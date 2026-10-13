@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion Commerce — Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">🛒</div>
+    <div class="brand-text">
+      <h1>ShopManager</h1>
+      <span>Gestion Pro</span>
+    </div>
+  </div>
+
+  <nav class="side-nav">
+    <button class="nav-btn active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      <span>Tableau de bord</span>
+    </button>
+    <button class="nav-btn" data-tab="produits">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Produits</span>
+    </button>
+    <button class="nav-btn" data-tab="ventes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Ventes</span>
+    </button>
+    <button class="nav-btn" data-tab="clients">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Clients</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button id="theme-toggle" class="theme-btn">
+      <span class="theme-icon">🌙</span>
+      <span class="theme-label">Mode sombre</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div>
+      <h2 id="page-title">Tableau de bord</h2>
+      <p id="page-subtitle">Vue d'ensemble de votre activité</p>
+    </div>
+    <div class="date-badge" id="current-date"></div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="tab active">
+    <div class="stats">
+      <div class="card stat-card gradient-1">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <span class="stat-label">Chiffre d'affaires</span>
+          <h3 class="stat-value" id="stat-ca">0 FCFA</h3>
+          <span class="stat-trend" id="trend-ca">—</span>
+        </div>
+      </div>
+      <div class="card stat-card gradient-2">
+        <div class="stat-icon">🧾</div>
+        <div class="stat-content">
+          <span class="stat-label">Ventes du jour</span>
+          <h3 class="stat-value" id="stat-ventes">0</h3>
+          <span class="stat-trend" id="trend-ventes">—</span>
+        </div>
+      </div>
+      <div class="card stat-card gradient-3">
+        <div class="stat-icon">📦</div>
+        <div class="stat-content">
+          <span class="stat-label">Produits en stock</span>
+          <h3 class="stat-value" id="stat-produits">0</h3>
+          <span class="stat-trend" id="trend-produits">—</span>
+        </div>
+      </div>
+      <div class="card stat-card gradient-4">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-content">
+          <span class="stat-label">Alertes stock</span>
+          <h3 class="stat-value" id="stat-alertes">0</h3>
+          <span class="stat-trend">À réapprovisionner</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUES -->
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3>📈 Chiffre d'affaires (7 derniers jours)</h3>
+          <div class="chart-legend-dot"><span class="dot dot-green"></span> CA quotidien</div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-ca"></canvas>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3>🥧 Répartition par produit</h3>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-produits"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3>📊 Top 5 produits vendus</h3>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-top"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="chart-header">
+          <h3>⚠️ Alertes de stock</h3>
+        </div>
+        <ul id="alertes-list" class="alerts-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUITS -->
+  <section id="produits" class="tab">
+    <div class="card">
+      <div class="section-header">
+        <h3>➕ Nouveau produit</h3>
+      </div>
+      <form id="form-produit" class="form-grid">
+        <div class="form-group">
+          <label>Nom du produit</label>
+          <input type="text" id="prod-nom" placeholder="Ex: Riz parfumé" required>
+        </div>
+        <div class="form-group">
+          <label>Prix unitaire</label>
+          <input type="number" id="prod-prix" placeholder="0" min="0" required>
+        </div>
+        <div class="form-group">
+          <label>Stock initial</label>
+          <input type="number" id="prod-stock" placeholder="0" min="0" required>
+        </div>
+        <div class="form-group">
+          <label>Seuil d'alerte</label>
+          <input type="number" id="prod-seuil" placeholder="5" value="5" min="0" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter le produit</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <h3>📦 Liste des produits</h3>
+        <span class="badge" id="badge-produits">0 produits</span>
+      </div>
+      <div class="table-wrapper">
+        <table id="table-produits">
+          <thead>
+            <tr><th>Nom</th><th>Prix</th><th>Stock</th><th>Seuil</th><th>Statut</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- VENTES -->
+  <section id="ventes" class="tab">
+    <div class="card">
+      <div class="section-header">
+        <h3>💵 Enregistrer une vente</h3>
+      </div>
+      <form id="form-vente" class="form-grid">
+        <div class="form-group">
+          <label>Produit</label>
+          <select id="vente-produit" required></select>
+        </div>
+        <div class="form-group">
+          <label>Quantité</label>
+          <input type="number" id="vente-qte" placeholder="1" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label>Client (optionnel)</label>
+          <select id="vente-client">
+            <option value="">— Aucun —</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <h3>📋 Historique des ventes</h3>
+        <span class="badge" id="badge-ventes">0 ventes</span>
+      </div>
+      <div class="table-wrapper">
+        <table id="table-ventes">
+          <thead>
+            <tr><th>Date</th><th>Produit</th><th>Qté</th><th>Total</th><th>Client</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="clients" class="tab">
+    <div class="card">
+      <div class="section-header">
+        <h3>➕ Nouveau client</h3>
+      </div>
+      <form id="form-client" class="form-grid">
+        <div class="form-group">
+          <label>Nom complet</label>
+          <input type="text" id="cli-nom" placeholder="Ex: Jean Kouassi" required>
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="cli-tel" placeholder="Ex: +225 07 00 00 00">
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter le client</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <h3>👥 Liste des clients</h3>
+        <span class="badge" id="badge-clients">0 clients</span>
+      </div>
+      <div class="table-wrapper">
+        <table id="table-clients">
+          <thead>
+            <tr><th>Nom</th><th>Téléphone</th><th>Total achats</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
